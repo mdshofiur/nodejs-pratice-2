@@ -54,13 +54,34 @@ async function run() {
      }) 
 
 
-   // update api
+   // get api for update api
      app.get('/users/:id', async (req, res) => {
           const id = req.params.id;
           const query = {_id: ObjectId(id)};
           const user = await UserCollections.findOne(query)
            res.send(user)
      })
+
+     // update api 
+     app.put('/users/:id', async (req, res) => {
+          const id = req.params.id;
+          const UpdatedUser = req.body;
+          const filter = {_id:ObjectId(id)};
+          const options = { upsert: true };
+          const updateDoc = {
+            $set: {
+              name: UpdatedUser.name,
+              email: UpdatedUser.email
+            },
+          };
+          const result = await UserCollections.updateOne(filter, updateDoc, options);
+           res.send(result)
+     })
+
+
+     
+
+
 
 
 
